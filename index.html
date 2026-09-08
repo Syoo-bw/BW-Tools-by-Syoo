@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bloodwars Tools by Syoo</title>
+<meta name="description" content="Narzędzia Bloodwars by Syoo: kalkulator HP i statystyki przeciwników.">
+<style>
+:root{color-scheme:dark;--bg:#0b0d12;--panel:#151922;--panel2:#1d2230;--line:#30384a;--text:#f3f4f6;--muted:#9ca3af;--accent:#b91c1c;--accent2:#ef4444}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top,#211014 0,#0b0d12 42%);color:var(--text)}
+main{max-width:920px;margin:0 auto;padding:64px 18px}.hero{text-align:center;margin-bottom:36px}.eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#f87171;font-weight:700}.hero h1{font-size:clamp(32px,6vw,54px);margin:10px 0 8px}.hero p{margin:0;color:var(--muted);font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.tool{display:flex;flex-direction:column;min-height:245px;padding:26px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,var(--panel),var(--panel2));text-decoration:none;color:inherit;box-shadow:0 18px 50px rgba(0,0,0,.25);transition:.18s transform,.18s border-color}.tool:hover{transform:translateY(-3px);border-color:#7f1d1d}.icon{font-size:38px;margin-bottom:20px}.tool h2{font-size:25px;margin:0 0 10px}.tool p{color:var(--muted);line-height:1.5;margin:0 0 24px}.go{margin-top:auto;font-weight:700;color:#fca5a5}.footer{text-align:center;color:#6b7280;font-size:13px;margin-top:32px}
+@media(max-width:680px){main{padding-top:34px}.grid{grid-template-columns:1fr}.tool{min-height:200px}}
+</style>
+</head>
+<body><main>
+<section class="hero"><div class="eyebrow">Bloodwars</div><h1>Bloodwars Tools <span style="color:#f87171">by Syoo</span></h1><p>Wybierz narzędzie, z którego chcesz skorzystać.</p></section>
+<section class="grid">
+<a class="tool" href="hp/"><div class="icon">❤</div><h2>Kalkulator HP</h2><p>Oblicz HP postaci z uwzględnieniem poziomu, rasy, talizmanów, bonusów i pozostałych modyfikatorów.</p><div class="go">Otwórz kalkulator →</div></a>
+<a class="tool" href="przeciwnicy/"><div class="icon">⚔</div><h2>Przeciwnicy – 2 mapa</h2><p>Sprawdź statystyki przeciwników na poziomach od 1★ do 12★ oraz HP zależne od liczby graczy.</p><div class="go">Sprawdź przeciwników →</div></a>
+</section>
+<div class="footer">Bloodwars Tools by Syoo</div>
+</main></body></html>
