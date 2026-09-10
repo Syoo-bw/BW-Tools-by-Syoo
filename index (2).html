@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bloodwars Tools by Syoo</title>
+<meta name="description" content="Narzędzia Bloodwars by Syoo: kalkulator HP i statystyki przeciwników.">
+<style>
+
+:root{
+  color-scheme:dark;
+  --bg:#070809;--panel:#101214;--panel2:#151719;--line:#3a2325;--line2:#52262a;
+  --text:#eee9e7;--muted:#aaa09d;--red:#8f1d24;--red2:#c8333a;--blood:#5c1015;
+  --gold:#d6b16e;--yellow:#dec36e;--green:#78b98a;--blue:#6b9fd1;--hp:#cf5559;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 50% -180px,rgba(120,17,24,.35),transparent 430px),
+    linear-gradient(rgba(4,5,6,.93),rgba(7,8,9,.97)),
+    repeating-linear-gradient(135deg,#0b0c0d 0,#0b0c0d 18px,#0e1011 18px,#0e1011 36px);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.10;
+  background:
+   radial-gradient(circle at 12% 15%,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+   radial-gradient(circle at 72% 32%,rgba(255,255,255,.13) 0 1px,transparent 1.5px);
+  background-size:79px 83px,113px 127px;
+}
+a{color:inherit}
+.shell{width:min(1240px,calc(100% - 28px));margin:0 auto;padding:20px 0 46px}
+.topbar{
+  display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  border-bottom:1px solid var(--line2);padding:2px 4px 16px;margin-bottom:18px
+}
+.brand h1{margin:0;font-size:clamp(28px,5vw,48px);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.brand h1 span{color:#d9d7d5;text-shadow:0 1px 0 #fff,0 4px 12px #000}
+.brand .sub{margin-top:4px;color:var(--muted);letter-spacing:.17em;text-transform:uppercase;font-size:12px}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav a{
+ text-decoration:none;border:1px solid #3a3d40;background:#111416;padding:10px 14px;border-radius:5px;
+ font:700 12px Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em
+}
+.nav a.active{border-color:#81252b;background:linear-gradient(#381316,#1b0c0d);color:#f0cece}
+.panel{
+ background:linear-gradient(180deg,rgba(24,26,28,.93),rgba(13,15,16,.94));
+ border:1px solid var(--line);border-radius:8px;overflow:hidden;
+ box-shadow:0 16px 38px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.025)
+}
+.panel-title{
+ padding:11px 14px;border-bottom:1px solid var(--line);
+ background:linear-gradient(90deg,#1b0c0d,#141617 62%);
+ font:700 13px Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#d9d3d0
+}
+.footer{margin-top:15px;color:#716b69;font:12px Arial,sans-serif;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.home-intro{margin:6px 0 18px;padding:22px}
+.home-intro h2{margin:0 0 8px;font-size:clamp(25px,4vw,38px);font-weight:500}
+.home-intro p{margin:0;color:#b9afab;font:15px/1.55 Arial,sans-serif}
+.tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.tool-panel{display:flex;flex-direction:column;min-height:260px;text-decoration:none;transition:.16s border-color,.16s transform}
+.tool-panel:hover{border-color:#743038;transform:translateY(-2px)}
+.tool-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.tool-icon{
+ width:52px;height:52px;display:grid;place-items:center;border:1px solid #633037;border-radius:6px;
+ background:linear-gradient(145deg,#351317,#160c0d);font:28px Arial,sans-serif;margin-bottom:18px
+}
+.tool-body h2{margin:0 0 9px;font-size:25px;font-weight:500}
+.tool-body p{margin:0;color:#b9afab;font:14px/1.55 Arial,sans-serif}
+.tool-go{
+ margin-top:auto;padding-top:20px;color:#e0b1b4;font:700 12px Arial,sans-serif;
+ text-transform:uppercase;letter-spacing:.07em
+}
+@media(max-width:680px){
+ .shell{width:min(100% - 16px,1240px);padding-top:10px}
+ .brand h1{font-size:29px}
+ .nav{width:100%}.nav a{flex:1;text-align:center;padding:9px 8px}
+ .tools-grid{grid-template-columns:1fr}
+ .tool-panel{min-height:220px}
+}
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <h1><span>Bloodwars</span> Tools</h1>
+      <div class="sub">Narzędzia · by Syoo</div>
+    </div>
+    <nav class="nav">
+      <a href="./" class="active">Strona główna</a>
+      <a href="hp/">Kalkulator HP</a>
+      <a href="przeciwnicy/">Przeciwnicy</a>
+    </nav>
+  </header>
+
+  <section class="panel home-intro">
+    <h2>Wybierz narzędzie</h2>
+    <p>Jeden spójny zestaw narzędzi do Bloodwars — kalkulator HP oraz parametry przeciwników z 2 mapy.</p>
+  </section>
+
+  <section class="tools-grid">
+    <a class="panel tool-panel" href="hp/">
+      <div class="panel-title">Kalkulator HP</div>
+      <div class="tool-body">
+        <div class="tool-icon">❤</div>
+        <h2>HP postaci</h2>
+        <p>Oblicz HP z uwzględnieniem poziomu, rasy, talizmanów, umagicznień, run, bonusów i pozostałych modyfikatorów.</p>
+        <div class="tool-go">Otwórz kalkulator →</div>
+      </div>
+    </a>
+
+    <a class="panel tool-panel" href="przeciwnicy/">
+      <div class="panel-title">Przeciwnicy · 2 mapa</div>
+      <div class="tool-body">
+        <div class="tool-icon">⚔</div>
+        <h2>Statystyki przeciwników</h2>
+        <p>Sprawdź zwinność, spostrzegawczość, sumę statystyk i HP przeciwników od 1★ do 12★ oraz ich specjalne mechaniki.</p>
+        <div class="tool-go">Sprawdź przeciwników →</div>
+      </div>
+    </a>
+  </section>
+
+  <div class="footer">
+    <span>Bloodwars Tools by Syoo</span>
+    <span>Strona główna</span>
+  </div>
+</div>
+</body>
+</html>
