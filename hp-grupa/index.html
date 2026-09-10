@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkulator HP grupy — Bloodwars Tools by Syoo</title><style>
+:root{color-scheme:dark;--panel:#101214;--line:#3a2325;--line2:#52262a;--text:#eee9e7;--muted:#aaa09d;--red:#8f1d24;--gold:#d6b16e;--green:#78b98a;--blue:#6b9fd1}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font-family:Georgia,"Times New Roman",serif;
+background:radial-gradient(circle at 50% -180px,rgba(120,17,24,.35),transparent 430px),
+linear-gradient(rgba(4,5,6,.93),rgba(7,8,9,.97)),
+repeating-linear-gradient(135deg,#0b0c0d 0,#0b0c0d 18px,#0e1011 18px,#0e1011 36px)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.10;background:
+radial-gradient(circle at 12% 15%,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+radial-gradient(circle at 72% 32%,rgba(255,255,255,.13) 0 1px,transparent 1.5px);background-size:79px 83px,113px 127px}
+.shell{width:min(1240px,calc(100% - 28px));margin:0 auto;padding:20px 0 46px}
+.topbar{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-bottom:1px solid var(--line2);padding:2px 4px 16px;margin-bottom:18px}
+.brand h1{margin:0;font-size:clamp(28px,5vw,48px);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.brand h1 span{color:#d9d7d5;text-shadow:0 1px 0 #fff,0 4px 12px #000}
+.brand .sub{margin-top:4px;color:var(--muted);letter-spacing:.17em;text-transform:uppercase;font-size:12px}
+.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a{text-decoration:none;color:inherit;border:1px solid #3a3d40;background:#111416;padding:10px 14px;border-radius:5px;font:700 12px Arial,sans-serif;text-transform:uppercase;letter-spacing:.04em}
+.nav a.active{border-color:#81252b;background:linear-gradient(#381316,#1b0c0d);color:#f0cece}
+.panel{background:linear-gradient(180deg,rgba(24,26,28,.93),rgba(13,15,16,.94));border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 16px 38px rgba(0,0,0,.3)}
+.panel-title{padding:11px 14px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#1b0c0d,#141617 62%);font:700 13px Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#d9d3d0}
+.footer{margin-top:15px;color:#716b69;font:12px Arial,sans-serif;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.changelog-link{margin-left:auto;text-decoration:none;border:1px solid #4a3032;background:#101214;color:#aaa09d;border-radius:4px;padding:5px 9px;font:700 10px Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em}
+
+.intro{padding:15px 16px;color:#bbb2ae;font:14px/1.5 Arial,sans-serif}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:14px 16px;border-top:1px solid #2b2526}
+button{border:1px solid #713037;background:linear-gradient(#381316,#1b0c0d);color:#f5eaea;border-radius:5px;padding:10px 14px;font:700 12px Arial,sans-serif;text-transform:uppercase;cursor:pointer}
+button.secondary{border-color:#3a3d40;background:#111416;color:#d0c8c5}
+.players{display:grid;gap:14px;margin-top:16px}
+.player{overflow:visible}
+.player-head{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#1b0c0d,#141617 62%)}
+.player-head strong{font:700 13px Arial,sans-serif;text-transform:uppercase;letter-spacing:.07em}
+.remove{padding:7px 10px;font-size:10px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px}
+.field{min-width:0}.field label{display:block;color:#aaa09d;font:700 10px Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:0 0 5px}
+input,select{width:100%;min-width:0;height:40px;border:1px solid #45494c;border-radius:5px;background:#0d1011;color:#eee9e7;padding:7px 9px;font:700 14px Arial,sans-serif}
+input[type=checkbox]{width:20px;height:20px;accent-color:#7d252b}
+.check{height:40px;display:flex;align-items:center;gap:8px;border:1px solid #45494c;border-radius:5px;padding:0 9px;background:#0d1011;font:13px Arial,sans-serif}
+.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:0 14px 14px}
+.result{border:1px solid #383c3e;border-radius:6px;background:#101315;padding:10px}
+.result .k{color:#9f9692;font:700 9px Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.result .v{margin-top:4px;font:700 20px Arial,sans-serif}.result.hp .v{color:#86bd94}.result.aura .v{color:#d7bd70}.result.crit .v{color:#8fb3d4}
+.note{margin:14px 16px;padding:10px 12px;border-left:2px solid #7d252b;background:rgba(90,18,23,.13);color:#bfb6b2;font:13px/1.45 Arial,sans-serif}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.results{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{width:100%;overflow:auto;flex-wrap:nowrap}.nav a{white-space:nowrap}}
+@media(max-width:420px){.shell{width:calc(100% - 16px);padding-top:10px}.brand h1{font-size:29px}.grid{grid-template-columns:1fr 1fr;padding:10px;gap:8px}.results{grid-template-columns:1fr 1fr;padding:0 10px 10px;gap:8px}.result .v{font-size:17px}}
+</style></head>
+<body><div class="shell">
+<header class="topbar"><div class="brand"><h1><span>Bloodwars</span> Tools</h1><div class="sub">Kalkulator HP grupy · by Syoo</div></div>
+<nav class="nav"><a href="../index.html">Strona główna</a><a href="../hp/index.html">Kalkulator HP</a><a class="active" href="./index.html">HP grupy</a><a href="../przeciwnicy/index.html">Przeciwnicy</a></nav></header>
+<section class="panel"><div class="panel-title">Kalkulator HP grupy — Aura Bestii</div>
+<div class="intro">Dodaj graczy i wpisz ich poziom Skóry Bestii. Własna Skóra daje <b>+30 bazowego HP/poziom</b>. Gracz z aktywną Aurą 4 daje każdemu sojusznikowi <b>+10 bazowego HP/poziom</b>. Aura jest dodawana do bazowego HP <b>przed procentowymi modyfikatorami</b>.</div>
+<div class="toolbar"><button id="add" type="button">+ Dodaj gracza</button><button id="reset" class="secondary" type="button">Wyczyść</button></div>
+<div class="note">Redukcja trafienia krytycznego: własna Skóra Bestii daje 1,25%/poziom niezależnie od aktywnej Aury. Aktywna Aura 4 przekazuje sojusznikom 0,75%/poziom, maksymalnie 200% bonusu sojuszniczego.</div>
+</section>
+<div class="players" id="players"></div>
+<div class="footer"><span>Bloodwars Tools by Syoo</span><span>Kalkulator HP grupy</span><a class="changelog-link" href="../changelog/index.html">Changelog</a></div>
+</div>
+<script>
+(()=>{
+const root=document.getElementById('players'), add=document.getElementById('add'), reset=document.getElementById('reset');
+const KEY='bloodwars_hp_group_by_syoo_v1';
+let state=[];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>Math.max(0,Number(v)||0);
+const fmt=n=>Math.round(n).toLocaleString('pl-PL');
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function addPlayer(){state.push({name:'Gracz '+(state.length+1),skin:0,aura:true,baseHp:0,hpPct:0});save();render()}
+function calc(i){
+ const p=state[i], own=num(p.skin);
+ let allySkin=0;
+ state.forEach((q,j)=>{if(j!==i && q.aura) allySkin+=num(q.skin)});
+ const ownAuraHp=own*30, allyAuraHp=allySkin*10, auraHp=ownAuraHp+allyAuraHp;
+ const baseBefore=num(p.baseHp), baseAfter=baseBefore+auraHp;
+ const finalHp=baseAfter*(1+num(p.hpPct)/100);
+ const ownCrit=own*1.25;
+ let allyCrit=0; state.forEach((q,j)=>{if(j!==i && q.aura) allyCrit+=num(q.skin)*0.75});
+ allyCrit=Math.min(200,allyCrit);
+ return {ownAuraHp,allyAuraHp,auraHp,baseAfter,finalHp,ownCrit,allyCrit,crit:ownCrit+allyCrit};
+}
+function render(){
+ root.innerHTML='';
+ state.forEach((p,i)=>{
+  const c=calc(i), el=document.createElement('section'); el.className='panel player';
+  el.innerHTML=`<div class="player-head"><strong>${esc(p.name||('Gracz '+(i+1)))}</strong><button type="button" class="remove" data-remove="${i}">Usuń</button></div>
+  <div class="grid">
+   <div class="field"><label>Nazwa gracza</label><input data-i="${i}" data-k="name" value="${esc(p.name)}"></div>
+   <div class="field"><label>Skóra Bestii</label><input type="number" min="0" step="1" data-i="${i}" data-k="skin" value="${p.skin}"></div>
+   <div class="field"><label>Aura Bestii</label><div class="check"><input type="checkbox" data-i="${i}" data-k="aura" ${p.aura?'checked':''}> Aura 4 aktywna</div></div>
+   <div class="field"><label>Bazowe HP przed Aurą</label><input type="number" min="0" step="1" data-i="${i}" data-k="baseHp" value="${p.baseHp}"></div>
+   <div class="field"><label>Łączny bonus HP (%)</label><input type="number" min="0" step="0.01" data-i="${i}" data-k="hpPct" value="${p.hpPct}"></div>
+  </div>
+  <div class="results">
+   <div class="result aura"><div class="k">Aura — własna</div><div class="v">+${fmt(c.ownAuraHp)}</div></div>
+   <div class="result aura"><div class="k">Aura — od sojuszników</div><div class="v">+${fmt(c.allyAuraHp)}</div></div>
+   <div class="result hp"><div class="k">Końcowe HP</div><div class="v">${fmt(c.finalHp)}</div></div>
+   <div class="result crit"><div class="k">Redukcja krytyka</div><div class="v">${c.crit.toLocaleString('pl-PL',{maximumFractionDigits:2})}%</div></div>
+  </div>`;
+  root.appendChild(el);
+ });
+}
+root.addEventListener('input',e=>{
+ const i=Number(e.target.dataset.i), k=e.target.dataset.k;if(!Number.isInteger(i)||!k)return;
+ state[i][k]=k==='aura'?e.target.checked:(k==='name'?e.target.value:num(e.target.value));save();render();
+});
+root.addEventListener('click',e=>{const x=e.target.dataset.remove;if(x!==undefined){state.splice(Number(x),1);save();render()}});
+add.addEventListener('click',addPlayer); reset.addEventListener('click',()=>{state=[];save();addPlayer()});
+try{state=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{state=[]}
+if(!Array.isArray(state)||!state.length){state=[];addPlayer()}else render();
+})();
+</script></body></html>
