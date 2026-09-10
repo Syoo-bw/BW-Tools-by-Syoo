@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kalkulator HP Bloodwars by Syoo</title>
+<meta name="description" content="Kalkulator HP Bloodwars by Syoo – szybkie obliczanie HP postaci z zapisem ustawień w przeglądarce." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><text y=%2250%22 x=%2250%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2250%22>❤</text></svg>">
+<style>
+
+:root{
+  color-scheme:dark;
+  --bg:#070809;--panel:#101214;--panel2:#151719;--line:#3a2325;--line2:#52262a;
+  --text:#eee9e7;--muted:#aaa09d;--red:#8f1d24;--red2:#c8333a;--blood:#5c1015;
+  --gold:#d6b16e;--yellow:#dec36e;--green:#78b98a;--blue:#6b9fd1;--hp:#cf5559;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 50% -180px,rgba(120,17,24,.35),transparent 430px),
+    linear-gradient(rgba(4,5,6,.93),rgba(7,8,9,.97)),
+    repeating-linear-gradient(135deg,#0b0c0d 0,#0b0c0d 18px,#0e1011 18px,#0e1011 36px);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.10;
+  background:
+   radial-gradient(circle at 12% 15%,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+   radial-gradient(circle at 72% 32%,rgba(255,255,255,.13) 0 1px,transparent 1.5px);
+  background-size:79px 83px,113px 127px;
+}
+a{color:inherit}
+.shell{width:min(1240px,calc(100% - 28px));margin:0 auto;padding:20px 0 46px}
+.topbar{
+  display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  border-bottom:1px solid var(--line2);padding:2px 4px 16px;margin-bottom:18px
+}
+.brand h1{margin:0;font-size:clamp(28px,5vw,48px);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.brand h1 span{color:#d9d7d5;text-shadow:0 1px 0 #fff,0 4px 12px #000}
+.brand .sub{margin-top:4px;color:var(--muted);letter-spacing:.17em;text-transform:uppercase;font-size:12px}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav a{
+ text-decoration:none;border:1px solid #3a3d40;background:#111416;padding:10px 14px;border-radius:5px;
+ font:700 12px Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em
+}
+.nav a.active{border-color:#81252b;background:linear-gradient(#381316,#1b0c0d);color:#f0cece}
+.panel{
+ background:linear-gradient(180deg,rgba(24,26,28,.93),rgba(13,15,16,.94));
+ border:1px solid var(--line);border-radius:8px;overflow:hidden;
+ box-shadow:0 16px 38px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.025)
+}
+.panel-title{
+ padding:11px 14px;border-bottom:1px solid var(--line);
+ background:linear-gradient(90deg,#1b0c0d,#141617 62%);
+ font:700 13px Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#d9d3d0
+}
+.footer{margin-top:15px;color:#716b69;font:12px Arial,sans-serif;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.hp-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.hp-toolbar{
+  padding:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  border-bottom:1px solid var(--line)
+}
+.save-status{color:var(--muted);font:13px Arial,sans-serif}
+button{
+  border:1px solid #713037;background:linear-gradient(#381316,#1b0c0d);color:#f5eaea;
+  border-radius:5px;padding:10px 14px;font:700 12px Arial,sans-serif;letter-spacing:.05em;
+  text-transform:uppercase;cursor:pointer
+}
+button:hover{border-color:#a0444c;background:linear-gradient(#4b171c,#231012)}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-family:Arial,sans-serif;min-width:720px}
+col.c1{width:27%} col.c2{width:17%} col.c3{width:23%} col.c4{width:17%} col.c5,col.c6{width:8%}
+td{height:44px;border:1px solid #303437;padding:6px 8px;vertical-align:middle}
+td.label{background:#111416;font-weight:700;color:#ded8d5}
+td.blank{background:#0d1011}
+td.input-cell{background:#d8be6b;padding:4px}
+td.result-label{
+  background:linear-gradient(90deg,#1b0c0d,#141617);font-weight:800;text-align:center;color:#f3eeee;
+  text-transform:uppercase;font-size:11px;letter-spacing:.05em
+}
+td.result{background:linear-gradient(145deg,#80bd90,#5d9870);color:#090a0a;font-weight:900;text-align:center;font-size:18px}
+td.result-ally{background:linear-gradient(145deg,#78a8d6,#5888b8);color:#090a0a;font-weight:900;text-align:center;font-size:18px}
+input,select{
+ width:100%;height:34px;border:1px solid #8e783d;border-radius:5px;padding:4px 7px;
+ font:700 14px Arial,sans-serif;background:#f3df91;color:#090a0a;outline:none
+}
+input:focus,select:focus{border-color:#6e5220;box-shadow:0 0 0 2px rgba(111,78,19,.18)}
+input[type=checkbox]{width:20px;height:20px;accent-color:#5c1015}
+.checkbox-wrap{display:flex;align-items:center;justify-content:center}
+.pct{display:flex;align-items:center;gap:5px;color:#000;font-weight:700}.pct span{min-width:18px}
+.details-panel{margin-top:18px}
+details{background:transparent;border:0;border-radius:0;padding:0}
+summary{
+  cursor:pointer;padding:12px 14px;border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg,#1b0c0d,#141617 62%);
+  font:700 13px Arial,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:#d9d3d0
+}
+.breakdown{display:grid;grid-template-columns:1fr auto;gap:7px 18px;padding:14px;font:14px Arial,sans-serif}
+.note{
+ margin-top:12px;border-left:2px solid #7d252b;padding:8px 10px;background:rgba(90,18,23,.13);
+ color:#bfb6b2;font:13px/1.45 Arial,sans-serif
+}
+@media(max-width:580px){
+ .shell{width:min(100% - 16px,1240px);padding-top:10px}
+ .brand h1{font-size:29px}
+ .nav{width:100%}.nav a{flex:1;text-align:center;padding:9px 8px}
+ .hp-toolbar{align-items:stretch}
+ .hp-toolbar button{width:100%}
+ table{min-width:650px}
+}
+
+
+.changelog-link{
+  margin-left:auto;text-decoration:none;border:1px solid #4a3032;background:#101214;
+  color:#aaa09d;border-radius:4px;padding:5px 9px;font:700 10px Arial,sans-serif;
+  text-transform:uppercase;letter-spacing:.06em
+}
+.changelog-link:hover{color:#eee9e7;border-color:#7a353a;background:#1b0c0d}
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <h1><span>Bloodwars</span> Tools</h1>
+      <div class="sub">Kalkulator HP · by Syoo</div>
+    </div>
+    <nav class="nav">
+      <a href="../index.html">Strona główna</a>
+      <a href="./index.html" class="active">Kalkulator HP</a><a href="../hp-grupa/index.html">HP grupy</a>
+      <a href="../przeciwnicy/index.html">Przeciwnicy</a>
+    </nav>
+  </header>
+
+  <section class="hp-wrap">
+    <section class="panel">
+      <div class="panel-title">Kalkulator HP postaci</div>
+      <div class="hp-toolbar">
+        <div class="save-status" id="saveStatus">Dane zapisują się automatycznie.</div>
+        <button id="resetBtn" type="button">Wyzeruj kalkulator</button>
+      </div>
+      <div class="table-wrap">
+        <table aria-label="Kalkulator HP">
+          <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"></colgroup>
+          <tbody id="sheet"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel details-panel">
+      <details>
+        <summary>Szczegóły obliczenia</summary>
+        <div class="breakdown" id="breakdown"></div>
+      </details>
+    </section>
+    <div class="note">Pola złote są edytowalne. Zielone pola pokazują wyniki HP, a niebieskie HP dla sojusznika.</div>
+  </section>
+
+  <div class="footer">
+    <span>Bloodwars Tools by Syoo</span>
+    <span>Kalkulator HP</span>
+  <a class="changelog-link" href="../changelog/index.html">Changelog</a></div>
+</div>
+
+<script>
+const rows = [
+  ['Oblężenie','siege','HP BAZOWE','baseHp','',''],
+  ['Adrenalina','adrenaline','','','',''],
+  ['Twój Poziom','level','','','',''],
+  ['HP z umagicznień','enchHp','TWOJE\nHP','totalHp','',''],
+  ['HP z run','runeHp','HP DLA\nSOJUSZNIKA','allyHp','',''],
+  ['Poziom Abso','abso','','','',''],
+  ['Poziom Pancerza','armor','','','',''],
+  ['Przedmiot jednorazowy','item','','','',''],
+  ['Rasa','race','','','',''],
+  ['Majestat','majesty','','','',''],
+  ['Żar krwi','bloodHeat','','','',''],
+  ['Cień Bestii','beastShadow','','','',''],
+  ['Wyssanie mocy','drain','Poziom talizmanu','talDrain','',''],
+  ['Skóra Bestii','beastSkin','Poziom talizmanu','talSkin','',''],
+  ['Tchnienie śmierci','deathBreath','Poziom talizmanu','talBreath','',''],
+  ['Maska Adonisa','adonis','Poziom talizmanu','talAdonis','',''],
+  ['Bonus z broni [%]','weaponBonus','','','',''],
+  ['Bonus z eq [%]','eqBonus','','','',''],
+  ['Poziom Kaplicy','chapel','','','',''],
+  ['Poziom Myśliwego','hunter','','','','']
+];
+
+const STORAGE_KEY = 'bloodwars_hp_by_syoo_v1';
+
+const defaults = {
+  siege:false, adrenaline:false, level:106, enchHp:2550, runeHp:525, abso:2, armor:0,
+  item:'Brak', race:'Łapacz Myśli', majesty:39, bloodHeat:'Nie', beastShadow:'Nie',
+  drain:0, talDrain:0, beastSkin:0, talSkin:0, deathBreath:52, talBreath:2,
+  adonis:0, talAdonis:0, weaponBonus:0, eqBonus:0, chapel:6, hunter:5
+};
+
+function loadState(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    return {...defaults, ...saved};
+  } catch (_) {
+    return {...defaults};
+  }
+}
+let state = loadState();
+
+const itemBonus = {'Brak':0,'Jabłko żelaznego drzewa':0.07,'Paznokieć trolla':0.10,'Ząb Ghula':0.14};
+const races = ['Kultysta','Ssak','Łapacz Myśli','Władca Zwierząt','Potępiony'];
+const absoTable = [
+ [0,0,0,0],[1,150,0,0],[2,300,0,0],[3,450,0,0],[4,950,0,0],[5,1550,0,0],
+ [6,1700,0,0],[7,1850,0,0],[8,2000,0,0],[9,2500,0,0],[10,3100,0,0],[11,3100,150,0],
+ [12,3100,300,0],[13,3100,450,0],[14,3100,950,0.30],[15,3100,1550,0.50]
+];
+const armorTable = [0,0,0,0,0.10,0.15,0.15,0.15,0.15,0.25,0.30,0.30,0.30,0.30,0.30,0.30];
+
+function inputHtml(key) {
+  const v = state[key];
+  if (key === 'siege' || key === 'adrenaline') return `<div class="checkbox-wrap"><input id="${key}" type="checkbox" ${v?'checked':''}></div>`;
+  if (key === 'item') return `<select id="${key}">${Object.keys(itemBonus).map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  if (key === 'race') return `<select id="${key}">${races.map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  if (key === 'bloodHeat' || key === 'beastShadow') return `<select id="${key}"><option ${v==='Nie'?'selected':''}>Nie</option><option ${v==='Tak'?'selected':''}>Tak</option></select>`;
+  if (key.startsWith('tal')) return `<select id="${key}">${[0,1,2,3,4].map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  if (key === 'abso' || key === 'armor') return `<select id="${key}">${Array.from({length:16},(_,x)=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  if (key === 'chapel') return `<select id="${key}">${Array.from({length:7},(_,x)=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  if (key === 'hunter') return `<select id="${key}">${Array.from({length:6},(_,x)=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  if (key === 'weaponBonus' || key === 'eqBonus') return `<div class="pct"><input id="${key}" type="number" step="0.01" value="${v}"><span>%</span></div>`;
+  return `<input id="${key}" type="number" step="1" value="${v}">`;
+}
+
+function buildSheet() {
+  const tbody = document.getElementById('sheet');
+  rows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    r.forEach((value,j)=>{
+      const td=document.createElement('td');
+      if ((j===1 && value) || (j===3 && value && !['baseHp','totalHp','allyHp'].includes(value))) {
+        td.className='input-cell'; td.innerHTML=inputHtml(value);
+      } else if (value==='baseHp' || value==='totalHp' || value==='allyHp') {
+        td.className = value==='allyHp' ? 'result-ally' : 'result';
+        td.id=value; td.textContent='—';
+      } else if (value) {
+        td.className = (j===2 ? 'result-label' : 'label');
+        td.innerHTML=value.replace('\n','<br>');
+      } else td.className='blank';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  document.querySelectorAll('input,select').forEach(el=>{
+    el.addEventListener('input',()=>{ saveState(); calculate(); });
+    el.addEventListener('change',()=>{ saveState(); calculate(); });
+  });
+  document.getElementById('resetBtn').addEventListener('click', resetState);
+
+}
+
+function num(id){ const x=parseFloat(document.getElementById(id).value); return Number.isFinite(x)?x:0; }
+function txt(id){ return document.getElementById(id).value; }
+function checked(id){ return document.getElementById(id).checked; }
+function collectState(){
+  const out={};
+  Object.keys(defaults).forEach(key=>{
+    const el=document.getElementById(key);
+    if(!el) return;
+    if(el.type==='checkbox') out[key]=el.checked;
+    else if(el.type==='number') {
+      const n=parseFloat(el.value);
+      out[key]=Number.isFinite(n)?n:0;
+    } else out[key]=el.value;
+  });
+  return out;
+}
+function saveState(){
+  state=collectState();
+  try {
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+    const status=document.getElementById('saveStatus');
+    if(status) status.textContent='Zapisano lokalnie na tym urządzeniu.';
+  } catch (_) {}
+}
+function resetState(){
+  // Zerujemy wszystkie wartości liczbowe. Pola opisowe ustawiamy na wartości neutralne,
+  // aby kalkulator po resecie nie dodawał żadnych dodatkowych bonusów.
+  const zeroState = {
+    siege:false,
+    adrenaline:false,
+    level:0,
+    enchHp:0,
+    runeHp:0,
+    abso:0,
+    armor:0,
+    item:'Brak',
+    race:'Kultysta',
+    majesty:0,
+    bloodHeat:'Nie',
+    beastShadow:'Nie',
+    drain:0,
+    talDrain:0,
+    beastSkin:0,
+    talSkin:0,
+    deathBreath:0,
+    talBreath:0,
+    adonis:0,
+    talAdonis:0,
+    weaponBonus:0,
+    eqBonus:0,
+    chapel:0,
+    hunter:0
+  };
+
+  state={...zeroState};
+  Object.keys(zeroState).forEach(key=>{
+    const el=document.getElementById(key);
+    if(!el) return;
+    if(el.type==='checkbox') el.checked=zeroState[key];
+    else el.value=zeroState[key];
+  });
+
+  try { localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); } catch (_) {}
+  calculate();
+  const status=document.getElementById('saveStatus');
+  if(status) status.textContent='Kalkulator wyzerowany i zapisany lokalnie.';
+}
+function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+
+// HP za poziom — bez górnego limitu; kontynuacja wzoru z arkusza.
+function levelHpPart(level) {
+  const n=Math.max(1,Math.floor(level));
+  let hp=102;
+  for(let k=2;k<=n;k++) hp += Math.floor(k/10)+4;
+  return hp;
+}
+// Dodatkowa część HP za dziesiątki poziomów — bez górnego limitu.
+function decadeHpPart(level) {
+  const m=Math.max(0,Math.floor(level/10));
+  return m*(5*m+4);
+}
+function baseHp(level){ return levelHpPart(level)+decadeHpPart(level); }
+
+function absoValues(level){ return absoTable[clamp(Math.floor(level),0,15)]; }
+function armorPct(level){ return armorTable[clamp(Math.floor(level),0,15)]; }
+function talDrainPct(lvl){ return [0,0.005,0.0075,0.01,0.015][clamp(Math.floor(lvl),0,4)]; }
+function talSkinMult(lvl){ return [0,5,10,20,30][clamp(Math.floor(lvl),0,4)]; }
+function talBreathPct(lvl){ return [0,0.03,0.04,0.05,0.06][clamp(Math.floor(lvl),0,4)]; }
+function talAdonisMult(lvl){ return [0,5,10,20,30][clamp(Math.floor(lvl),0,4)]; }
+function hunterBonus(playerLevel,hunterLevel,siege){
+  if(siege || hunterLevel<=0) return 0;
+  const steps={1:20,2:16,3:14,4:12,5:10};
+  const caps={1:1250,2:1600,3:1800,4:2100,5:2500};
+  const h=clamp(Math.floor(hunterLevel),1,5);
+  return Math.min(Math.floor(Math.max(playerLevel,0)/steps[h])*50,caps[h]);
+}
+function chapelBonus(level,siege){ return siege ? 0 : clamp(Math.floor(level),0,6)*75; }
+
+function calculate(){
+  const siege=checked('siege'), adrenaline=checked('adrenaline'), level=num('level'), race=txt('race');
+  const base=baseHp(level);
+  const [,absoFlat,absoSecond,absoPct]=absoValues(num('abso'));
+  const armor=armorPct(num('armor'));
+  const item=itemBonus[txt('item')]||0;
+  const racePct = race==='Ssak'?0.10:(race==='Władca Zwierząt'?0.20:0);
+  const majestyPct = race==='Łapacz Myśli' ? num('majesty')*0.07 : 0;
+  const heatPct = (race==='Kultysta' && txt('bloodHeat')==='Tak') ? 0.40 : 0;
+  const shadowPct = (race==='Władca Zwierząt' && txt('beastShadow')==='Tak') ? 0.30 : 0;
+  const drainPct = num('drain')*talDrainPct(num('talDrain'));
+  const skinFlat = num('beastSkin')*talSkinMult(num('talSkin'));
+  const breathRaw = num('deathBreath')*talBreathPct(num('talBreath'));
+  // Zgodnie z poprawioną formułą Q15: Tchnienie działa tylko dla Potępionego i ma limit 400% (=4.00).
+  const breathPct = race==='Potępiony' ? Math.min(breathRaw,4) : 0;
+  const adonisFlat = num('adonis')*talAdonisMult(num('talAdonis'));
+  const weaponPct = num('weaponBonus')/100;
+  const eqPct = num('eqBonus')/100;
+  const chapel=chapelBonus(num('chapel'),siege);
+  const hunter=hunterBonus(level,num('hunter'),siege);
+
+  const multiplier = 1+armor+item+racePct+majestyPct+heatPct+shadowPct+drainPct+breathPct+weaponPct+eqPct+absoPct;
+  // Skóra Bestii zwiększa podstawę HP przed zastosowaniem wszystkich modyfikatorów procentowych.
+  const hpBeforePct = base + num('enchHp') + absoSecond + skinFlat;
+  const totalBeforeAdrenaline=hpBeforePct*multiplier + num('runeHp') + absoFlat + adonisFlat + chapel + hunter;
+  const total=totalBeforeAdrenaline*(adrenaline ? 1.15 : 1);
+
+  document.getElementById('baseHp').textContent=Math.round(base).toLocaleString('pl-PL');
+  const roundedTotal=Math.round(total);
+  document.getElementById('totalHp').textContent=roundedTotal.toLocaleString('pl-PL');
+
+  // HP dla sojusznika: wyłącznie przy 4. poziomie talizmanu Skóra Bestii.
+  // Każde "oczko" Skóry Bestii daje wtedy sojusznikowi 10 HP.
+  const allyHp = num('talSkin') === 4 ? num('beastSkin') * 10 : null;
+  document.getElementById('allyHp').textContent =
+    allyHp === null ? '—' : Math.round(allyHp).toLocaleString('pl-PL');
+  const data=[
+    ['HP bazowe',base],['Abso – HP płaskie',absoFlat],['Abso – HP do podstawy',absoSecond],['Mnożnik łączny',multiplier],
+    ['Skóra Bestii – HP do podstawy',skinFlat],['Maska Adonisa – HP',adonisFlat],['Kaplica – HP',chapel],['Myśliwy – HP',hunter],
+    ['HP przed Adrenaliną',totalBeforeAdrenaline],['Adrenalina',adrenaline ? '×1,15' : 'Nie'],['Wynik końcowy (zaokrąglony)',roundedTotal]
+  ];
+  document.getElementById('breakdown').innerHTML=data.map(([k,v])=>{
+    let shown;
+    if (typeof v === 'string') shown=v;
+    else shown = k==='Mnożnik łączny' ? v.toFixed(4) : v.toLocaleString('pl-PL',{maximumFractionDigits:2});
+    return `<div>${k}</div><div><b>${shown}</b></div>`;
+  }).join('');
+}
+
+buildSheet();
+calculate();
+</script>
+</body>
+</html>
